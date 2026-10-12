@@ -1,0 +1,14 @@
+# Build artifacts
+**/bin/
+**/obj/
+frontend/dist/
+frontend/node_modules/
+
+# IDE / System
+.vscode/
+.vs/
+.idea/
+*.user
+*.suo
+Thumbs.db
+.DS_Store

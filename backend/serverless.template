@@ -1,0 +1,78 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Transform": "AWS::Serverless-2016-10-31",
+  "Description": "An AWS Serverless application deploying C# .NET 8 Lambda functions with API Gateway for React frontend integration.",
+  "Globals": {
+    "Function": {
+      "Runtime": "dotnet8",
+      "MemorySize": 256,
+      "Timeout": 15,
+      "Architectures": ["x86_64"]
+    },
+    "Api": {
+      "Cors": {
+        "AllowMethods": "'GET,POST,OPTIONS'",
+        "AllowHeaders": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+        "AllowOrigin": "'*'"
+      }
+    }
+  },
+  "Resources": {
+    "GreetingFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "GreetingFunction::GreetingFunction.Function::FunctionHandler",
+        "CodeUri": "./GreetingFunction",
+        "Description": "Greets user with localized message and timestamp",
+        "Events": {
+          "GreetingGet": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/api/greeting",
+              "Method": "GET"
+            }
+          },
+          "GreetingPost": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/api/greeting",
+              "Method": "POST"
+            }
+          }
+        }
+      }
+    },
+    "CalculatorFunction": {
+      "Type": "AWS::Serverless::Function",
+      "Properties": {
+        "Handler": "CalculatorFunction::CalculatorFunction.Function::FunctionHandler",
+        "CodeUri": "./CalculatorFunction",
+        "Description": "Performs arithmetic calculations in AWS Lambda",
+        "Events": {
+          "CalculatorGet": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/api/calculator",
+              "Method": "GET"
+            }
+          },
+          "CalculatorPost": {
+            "Type": "Api",
+            "Properties": {
+              "Path": "/api/calculator",
+              "Method": "POST"
+            }
+          }
+        }
+      }
+    }
+  },
+  "Outputs": {
+    "ApiURL": {
+      "Description": "Base URL of the AWS API Gateway endpoint for your React frontend",
+      "Value": {
+        "Fn::Sub": "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/"
+      }
+    }
+  }
+}
